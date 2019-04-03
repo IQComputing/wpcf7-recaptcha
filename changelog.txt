@@ -2,6 +2,14 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.1.6 =
+
+Release Date: April 02, 2019
+
+* Overview
+	* Forum user @aldebaran57 points out how to add localization to the reCaptcha API which was tested and integrated.
+		* https://wordpress.org/support/topic/force-language-of-widget-so-it-reacts-to-language-switcher-on-multi-lang-sites/
+
 = 1.1.5 =
 
 Release Date: February 25, 2019
@@ -9,6 +17,7 @@ Release Date: February 25, 2019
 * Overview
 	* Added plugin to github and link to github on description page.
 	* Ran into issue committing v1.1.4 which caused json checksums to not reflect some changes made. Thank @willpresleyev for pointing this out!
+		* https://wordpress.org/support/topic/plugin-checksum-json-needs-updated/
 
 = 1.1.4 =
 

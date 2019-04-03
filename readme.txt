@@ -3,7 +3,7 @@ Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
 Tested up to: 5.1
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,9 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.1.6 (2019-04-02) =
+* Added localization to reCaptcha API box which translates related text. Thanks @aldebaran57!
+
 = 1.1.5 (2019-02-25) =
 
 * Added link to github in description
@@ -73,9 +76,3 @@ Should the above be correct, at this point it's time to open a support thread fo
 * Multisite - Network Admins will notice a new menu item under plugins labelled "WPCF7 reCaptcha Settings"
 * Multisite - Network Admins now have the ability to add default keys and settings for sites. Individual sites can overwrite these defaults should they choose to.
 * Multisite - Default Network settings do not override keys or settings if they are already set/saved on the individual site. These only apply if none are found on the individual site.
-
-= 1.1.3 (2019-02-06) =
-* An attempt to make translations easier and better overall.
-* Combined a few redundant translation functions into a single translation function.
-* Made wording and references more consistent.
-* Added a margin-bottom: 0 style to the reCaptcha iframe in an attempt to prevent CSS overlapping.

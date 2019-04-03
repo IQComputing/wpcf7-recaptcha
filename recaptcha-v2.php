@@ -62,8 +62,9 @@ function iqfix_wpcf7_recaptcha_enqueue_scripts() {
 
 	$url = 'https://www.google.com/recaptcha/api.js';
 	$url = add_query_arg( array(
-		'onload' => 'recaptchaCallback',
-		'render' => 'explicit',
+		'hl'		=> esc_attr( get_locale() ),	// Lowercase L
+		'onload'	=> 'recaptchaCallback',
+		'render' 	=> 'explicit',
 	), $url );
 
 	wp_register_script( 'google-recaptcha', $url, array(), '2.0', true );
