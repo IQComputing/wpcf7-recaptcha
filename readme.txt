@@ -70,12 +70,3 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 * Added link to github in description
 * Updated version number to fix json checksum (Thanks @willpresleyev)!
-
-= 1.1.4 (2019-02-21) =
-* We need your help translating this plugin! Interested parties may contribute at: https://translate.wordpress.org/projects/wp-plugins/wpcf7-recaptcha
-*
-* Ensured WordPress 5.1 compatibility
-* Removed languages folder to avoid confusion with glotpress.
-* Multisite - Network Admins will notice a new menu item under plugins labelled "WPCF7 reCaptcha Settings"
-* Multisite - Network Admins now have the ability to add default keys and settings for sites. Individual sites can overwrite these defaults should they choose to.
-* Multisite - Default Network settings do not override keys or settings if they are already set/saved on the individual site. These only apply if none are found on the individual site.
