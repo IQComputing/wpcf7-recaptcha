@@ -60,6 +60,9 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.1.7 (2019-04-26) =
+* Fixed WPCF7+Flamingo bug which saved un-verified submissions to spam in Flamingo. Thanks @scits!
+
 = 1.1.6 (2019-04-02) =
 * Added localization to reCaptcha API box which translates related text. Thanks @aldebaran57!
 
