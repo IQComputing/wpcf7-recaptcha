@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Contact Form 7 - reCaptcha v2
  * Description: ReCaptcha v2 Fix for Contact Form 7 5.1 and later.
- * Version: 1.1.6
+ * Version: 1.1.7
  * Author: IQComputing
  * Author URI: http://www.iqcomputing.com/
  * License: GPL2
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
  */
 Class IQFix_WPCF7_Deity {
 
-	public static $version = '1.1.6';
+	public static $version = '1.1.7';
 
 
 	/**
@@ -53,6 +53,10 @@ Class IQFix_WPCF7_Deity {
 		}
 
 		include_once( plugin_dir_path( __FILE__ ) . 'recaptcha-v2.php' );
+		
+		if( class_exists( 'Flamingo_Contact' ) ) {
+			include_once( plugin_dir_path( __FILE__ ) . 'flamingo.php' );	// Flamingo updates
+		}
 
 	}
 

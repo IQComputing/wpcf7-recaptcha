@@ -2,6 +2,20 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.1.7 =
+
+Release Date: April 26, 2019
+
+* Overview
+	* Contact Forms could still be submitted to Flamingo even when the reCaptcha was not being clicked or interacted with.
+		We've hook into before Contact Form 7 does their Flamingo submission and removed the hook if 1) There's a reCaptcha on the form and 2) no reCaptcha verification was found in the submitted data.]
+		This should prevent the multitude of spam posts being saved in Flamingo.
+		Thanks to @scits to bringing this issue to our attention!
+		
+* Files Added
+	* wpcf7-recaptcha/flamingo.php
+		* Only gets included and processed whenever Flamingo is detected to be installed and active.
+
 = 1.1.6 =
 
 Release Date: April 02, 2019
