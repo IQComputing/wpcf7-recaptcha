@@ -3,7 +3,7 @@ Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
 Tested up to: 5.1
-Stable tag: 1.1.7
+Stable tag: 1.1.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,7 +60,7 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
-= 1.1.7 (2019-04-26) =
+= 1.1.8 (2019-04-26) =
 * Fixed WPCF7+Flamingo bug which saved un-verified submissions to spam in Flamingo. Thanks @scits!
 
 = 1.1.6 (2019-04-02) =
