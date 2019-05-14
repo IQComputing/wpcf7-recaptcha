@@ -2,8 +2,8 @@
 Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
-Tested up to: 5.1
-Stable tag: 1.1.8
+Tested up to: 5.2
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ Once installed and configured it should be the same reCaptcha functionality you 
 
 1. Install this (Contact Form 7 - reCaptcha v2) plugin
 1. Update Contact Form 7 to the latest version
-1. Re-add the reCaptcha version 2 API keys (if no keys are currently set). For more information you may read the [Contact Form 7 documentation](https://contactform7.com/recaptcha-v2/ "Contact Form 7 reCaptcha(v2)")
+1. Re-add the reCaptcha version 2 API keys (if no keys are currently set). For more information you may read [How to Generate Google reCAPTCHA v2 Keys](https://www.iqcomputing.com/support/articles/generate-google-recaptcha-v2-keys/) by IQComputing and [Contact Form 7 documentation](https://contactform7.com/recaptcha-v2/ "Contact Form 7 reCaptcha(v2)")
 1. Using the left-hand admin navigation in the Contact Form 7 subpages click "reCaptcha Version" (Contact -> reCaptcha Version)
 1. Once on the "Contact Form 7 - reCaptcha v2" settings page, select from the select list "reCaptcha Version 2" and click "save"
 
@@ -60,13 +60,11 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.1.9 (2019-05-14) =
+* Added selectable option to choose which website to pull reCaptcha resources from (google.com | recaptcha.net)
+
 = 1.1.8 (2019-04-26) =
 * Fixed WPCF7+Flamingo bug which saved un-verified submissions to spam in Flamingo. Thanks @scits!
 
 = 1.1.6 (2019-04-02) =
 * Added localization to reCaptcha API box which translates related text. Thanks @aldebaran57!
-
-= 1.1.5 (2019-02-25) =
-
-* Added link to github in description
-* Updated version number to fix json checksum (Thanks @willpresleyev)!

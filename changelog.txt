@@ -2,6 +2,14 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.1.9 =
+
+Release Date: May 14, 2019
+
+* Overview
+	* Added option to allow user to choose which website to pull the reCaptcha resources from.
+		The choices are google.com or recaptcha.net. These are for situations or countries that specifically block Google and prevent our reCaptcha from appearing.
+
 = 1.1.8 =
 
 Release Date: April 26, 2019
