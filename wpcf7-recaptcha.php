@@ -34,6 +34,25 @@ Class IQFix_WPCF7_Deity {
 		$class->filter_hooks();
 
 	}
+	
+	
+	/**
+	 * Really don't like dynamically assigning URLs by user saved options.
+	 * This method will verify at every stage that the given value is either
+	 * `google.com` or `recaptcha.net`
+	 * Nowhere in between can this value be changed to anything but those two.
+	 * 
+	 * @param $expectation
+	 * 
+	 * @return $reality
+	 */
+	public static function verify_recaptcha_source( $expectation = 'google.com' ) {
+		
+		$reality = ( in_array( $expectation, array( 'google.com', 'recaptcha.net' ) ) ) ? $expectation : 'google.com';
+		
+		return $reality;
+		
+	}
 
 	
 	/**
@@ -58,6 +77,54 @@ Class IQFix_WPCF7_Deity {
 			include_once( plugin_dir_path( __FILE__ ) . 'flamingo.php' );	// Flamingo updates
 		}
 
+	}
+	
+	
+	/**
+	 * Save the reCaptcha settings from our options page
+	 * @see IQFix_WPCF7_Deity::display_recaptcha_version_subpage()
+	 * 
+	 * @return Boolean
+	 */
+	private function save_recaptcha_settings() {
+		
+		// Form hasn't POSTed, return early
+		if( ! isset( $_POST, $_POST['iqfix_recaptcha_version'], $_POST['iqfix_wpcf7_submit'] ) ) {
+			return false;
+		}
+		
+		// Ensure we have and can verify our nonce. IF not, return early
+		if( ! ( ! empty( $_POST['iqfix_wpcf7_nonce'] ) && wp_verify_nonce( $_POST['iqfix_wpcf7_nonce'], 'iqfix_wpcf7_vers_select' ) ) ) {
+			return false;
+		}
+			
+		$selection 	= intval( $_POST['iqfix_recaptcha_version'] );
+		$source		= ( isset( $_POST, $_POST['iqfix_recaptcha_source'] ) ) ? sanitize_text_field( $_POST['iqfix_recaptcha_source'] ) : 'google.com';
+		$source		= self::verify_recaptcha_source( $source );
+		
+		// Save Network Settings
+		if( is_network_admin() && isset( $_POST['wpcf7_recaptcha_network'] ) ) {
+			
+			$sitekey 	= trim( $_POST['wpcf7_recaptcha_network']['sitekey'] );
+			$secretkey 	= trim( $_POST['wpcf7_recaptcha_network']['secretkey'] );
+			
+			update_site_option( 'network_iqfix_recaptcha', array(
+				'sitekey' 			=> $sitekey,
+				'secret'			=> $secretkey,
+				'iqfix_recaptcha'	=> $selection,
+				'recaptcha_source'	=> $source,
+			) );
+		
+		// Save Regular WPCF7 Settings
+		} else {
+		
+			WPCF7::update_option( 'iqfix_recaptcha', 		$selection 	);
+			WPCF7::update_option( 'iqfix_recaptcha_source', $source 	);
+			
+		}
+		
+		return true;
+		
 	}
 
 
@@ -131,43 +198,23 @@ Class IQFix_WPCF7_Deity {
 	 */
 	public function display_recaptcha_version_subpage() {
 
-		$updated	= false;
+		$updated = $this->save_recaptcha_settings();
 		
+		// Grab Network Settings
 		if( is_network_admin() ) {
+			
 			$network_options = get_site_option( 'network_iqfix_recaptcha' );
 			$selection		 = ( ! empty( $network_options['iqfix_recaptcha'] ) ) 	? $network_options['iqfix_recaptcha'] 	: '';
+			$source			 = ( ! empty( $network_options['recaptcha_source'] ) )	? $network_options['recaptcha_source']	: '';
 			$sitekey		 = ( ! empty( $network_options['sitekey'] ) ) 			? $network_options['sitekey'] 			: '';
 			$secretkey		 = ( ! empty( $network_options['secret'] ) ) 			? $network_options['secret'] 			: '';
+			
+		// Grab Site Settings
 		} else {
+			
 			$selection 	= WPCF7::get_option( 'iqfix_recaptcha' );
-		}
-
-		// Update Option
-		if( isset( $_POST, $_POST['iqfix_recaptcha_version'], $_POST['iqfix_wpcf7_submit'] ) ) {
-
-			if( ! empty( $_POST['iqfix_wpcf7_nonce'] ) && wp_verify_nonce( $_POST['iqfix_wpcf7_nonce'], 'iqfix_wpcf7_vers_select' ) ) {
-				$selection = intval( $_POST['iqfix_recaptcha_version'] );
-				
-				if( is_network_admin() && isset( $_POST['wpcf7_recaptcha_network'] ) ) {
-					
-					$sitekey 	= trim( $_POST['wpcf7_recaptcha_network']['sitekey'] );
-					$secretkey 	= trim( $_POST['wpcf7_recaptcha_network']['secretkey'] );
-					
-					update_site_option( 'network_iqfix_recaptcha', array(
-						'sitekey' 			=> $sitekey,
-						'secret'			=> $secretkey,
-						'iqfix_recaptcha'	=> $selection,
-					) );
-					
-				} else {
-				
-					WPCF7::update_option( 'iqfix_recaptcha', $selection );
-					
-				}
-					
-				$updated = true;
-			}
-
+			$source 	= WPCF7::get_option( 'iqfix_recaptcha_source' );
+			
 		}
 
 		// Show simple message
@@ -210,15 +257,25 @@ Class IQFix_WPCF7_Deity {
 
 				<form method="post">
 					<?php wp_nonce_field( 'iqfix_wpcf7_vers_select', 'iqfix_wpcf7_nonce' ); ?>
-					<select name="iqfix_recaptcha_version">
+					
+					<label for="iqfix_recaptcha_version"><strong><?php esc_html_e( 'Select reCaptcha Usage' ); ?>:</strong></label><br />
+					<select id="iqfix_recaptcha_version" name="iqfix_recaptcha_version">
 						<option value="0"><?php esc_html_e( 'Default Usage', 'wpcf7-recaptcha' ); ?></option>
 						<option value="2" <?php selected( $selection, 2, true ); ?>><?php esc_html_e( 'reCaptcha Version 2', 'wpcf7-recaptcha' ); ?></option>
+					</select>
+					
+					<?php printf( '<p>%s</p>', esc_html__( 'If you\'re not sure if your country blocks Google then you may leave this as default. Otherwise, if your country blocks google.com requests then please select the suggested recaptcha.net alternative below.' ) ); ?>
+					
+					<label for="iqfix_recaptcha_source"><strong><?php esc_html_e( 'Select reCaptcha Source' ); ?>:</strong></label><br />
+					<select id="iqfix_recaptcha_source" name="iqfix_recaptcha_source">
+						<option value="google.com">google.com</option>
+						<option value="recaptcha.net" <?php selected( $source, 'recaptcha.net', true ); ?>>recaptcha.net</option>
 					</select>
 					
 					<?php if( is_network_admin() ) : ?>
 						
 						<hr />
-						<h2>Network Wide Settings</h2>
+						<h2><?php esc_html__( 'Network Wide Settings' ); ?></h2>
 						
 						<p><strong><?php _e( 'Please read all of the below before committing to these changes.', 'wpcf7-recaptcha' ); ?></strong></p>
 						<p><?php _e( 'You may set Network wide API keys below. Please ensure that every network site is whitelisted in the Google API Console. ReCaptcha keys can still be set ( or unset ) on a per site basis if necessary.', 'wpcf7-recaptcha' ); ?></p>

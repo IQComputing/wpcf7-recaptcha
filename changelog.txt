@@ -9,6 +9,12 @@ Release Date: May 14, 2019
 * Overview
 	* Added option to allow user to choose which website to pull the reCaptcha resources from.
 		The choices are google.com or recaptcha.net. These are for situations or countries that specifically block Google and prevent our reCaptcha from appearing.
+		
+* Code Changes
+	* Updated recaptcha-v2.php file to switch out the recaptcha source URLs
+	* Added private method to handle saving settings: IQFix_WPCF7_Deity::save_recaptcha_settings()
+	* Added public static method to ensure my own sanity: IQFix_WPCF7_Deity::verify_recaptcha_source()
+		* Makes sure that at every point our source is either google.com or recaptcha.net
 
 = 1.1.8 =
 
