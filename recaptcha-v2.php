@@ -246,9 +246,8 @@ function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
 
 <noscript>
 	<div class="grecaptcha-noscript">
-		<iframe src="<?php echo esc_url( $url ); ?>" frameborder="0" scrolling="no" width="500" height="430"></iframe>
-		<textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
-		<input type="hidden" name="recaptcha_response_field" value="manual_challenge">
+		<iframe src="<?php echo esc_url( $url ); ?>" frameborder="0" scrolling="no" width="310" height="430"></iframe>
+		<textarea name="g-recaptcha-response" rows="3" cols="40" placeholder="<?php esc_attr_e( 'reCaptcha Response Here' ); ?>"></textarea>
 	</div>
 </noscript>
 <?php
@@ -592,7 +591,7 @@ function iqfix_recaptcha_class_init() {
 			$url 	 = sprintf( 'https://www.%s/recaptcha/api/siteverify', $source );
 			$sitekey = $this->get_sitekey();
 			$secret  = $this->get_secret( $sitekey );
-	
+			
 			$response = wp_safe_remote_post( $url, array(
 				'body' => array(
 					'secret' => $secret,
@@ -602,14 +601,20 @@ function iqfix_recaptcha_class_init() {
 			) );
 	
 			if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
+				
+				if ( WP_DEBUG ) {
+					$this->log( $endpoint, $request, $response );
+				}
+	
 				return $is_human;
+				
 			}
 	
 			$response = wp_remote_retrieve_body( $response );
 			$response = json_decode( $response, true );
-
 			$is_human = isset( $response['success'] ) && true == $response['success'];
-			return $is_human;
+			
+			return apply_filters( 'wpcf7_recaptcha_verify_response', $is_human, $response );
 
 		}
 
