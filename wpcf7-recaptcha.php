@@ -365,6 +365,11 @@ Class IQFix_WPCF7_Deity {
 			$value['iqfix_recaptcha'] = $network_wpcf7['iqfix_recaptcha'];
 		}
 		
+		// Set IQFix reCaptcha Source
+		if( ! isset( $value['iqfix_recaptcha_source'] ) && ! empty( $network_wpcf7['recaptcha_source'] ) ) {
+			$value['iqfix_recaptcha_source'] = $network_wpcf7['recaptcha_source'];
+		}
+		
 		return $value;
 		
 	}
