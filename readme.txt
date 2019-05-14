@@ -61,7 +61,7 @@ Should the above be correct, at this point it's time to open a support thread fo
 == Changelog ==
 
 = 1.1.9 (2019-05-14) =
-* Added selectable option to choose which website to pull reCaptcha resources from (google.com | recaptcha.net)
+* Added selectable option to choose which website to pull reCaptcha resources from (google.com | recaptcha.net) Thanks @scits!
 * Added and modified some class methods. See extended changelog for further details.
 * Modified noscript reCaptcha to look and function better "default". Styling left to theme authors and developers.
 
