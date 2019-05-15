@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
 
 
 /**
- * Remove old hooks and add new hook callbacks
+ * Remove old hooks and add new hook c
  * 
  * @return void
  */
@@ -70,7 +70,7 @@ function iqfix_wpcf7_recaptcha_enqueue_scripts() {
 		'render' 	=> 'explicit',
 	), $url );
 
-	wp_register_script( 'google-recaptcha', $url, array(), '2.0', true );
+	wp_register_script( 'google-recaptcha', $url, array( 'jquery' ), '2.0', true );
 	wp_localize_script( 'google-recaptcha', 'wpcf7iqfix', array(
         'recaptcha_empty' => esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
     ) );
