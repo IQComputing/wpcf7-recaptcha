@@ -2,6 +2,19 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.2.0 =
+
+Release Date: June 13, 2019
+
+* Overview
+	* Removed jQuery dependecy entirely.
+	* Converted inline jQuery to JavaScript in regards to reCaptcha validation upon submission.
+	* Updated noscript reCaptcha to include a line break which A3 Lazy Load decides it won't lazy load for some reason.
+	
+* Code Changes
+	* recaptcha-v2.php -> iqfix_wpcf7_recaptcha_callback_script() Updated  inline jQuery to vanilla JavaScript.
+	* recaptcha-v2.php -> iqfix_wpcf7_recaptcha_noscript() Added a linebreak to noscript iframe and textarea in an attempt to prevent A3 Lazy Load plugin from lazying loading the iframe.
+
 = 1.1.9 =
 
 Release Date: May 14, 2019

@@ -60,6 +60,11 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.2.0 (2019-06-13) =
+* Removed jQuery dependecy.
+* Converted jQuery reCaptcha submission check to vanilla JavaScript.
+* Updated reCaptcha noscript to account for A3 Lazy Load Plugin.
+
 = 1.1.9 (2019-05-14) =
 * Added selectable option to choose which website to pull reCaptcha resources from (google.com | recaptcha.net) Thanks @scits!
 * Added and modified some class methods. See extended changelog for further details.
@@ -67,6 +72,3 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 = 1.1.8 (2019-04-26) =
 * Fixed WPCF7+Flamingo bug which saved un-verified submissions to spam in Flamingo. Thanks @scits!
-
-= 1.1.6 (2019-04-02) =
-* Added localization to reCaptcha API box which translates related text. Thanks @aldebaran57!

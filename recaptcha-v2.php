@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
 
 
 /**
- * Remove old hooks and add new hook c
+ * Remove old hooks and add new hook callbacks
  * 
  * @return void
  */
@@ -70,7 +70,7 @@ function iqfix_wpcf7_recaptcha_enqueue_scripts() {
 		'render' 	=> 'explicit',
 	), $url );
 
-	wp_register_script( 'google-recaptcha', $url, array( 'jquery' ), '2.0', true );
+	wp_register_script( 'google-recaptcha', $url, array(), '2.0', true );
 	wp_localize_script( 'google-recaptcha', 'wpcf7iqfix', array(
         'recaptcha_empty' => esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
     ) );
@@ -81,10 +81,6 @@ function iqfix_wpcf7_recaptcha_enqueue_scripts() {
 
 /**
  * reCaptcha Javascript
- * 
- * The following function was not written by IQComputing and is included in
- * Contact Form 7 v5.0.5 by Takayuki Miyoshi
- * contact-form-7\modules\recaptcha.php LN253
  * 
  * @return void
  */
@@ -148,16 +144,17 @@ document.addEventListener( 'wpcf7submit', function( event ) {
 	}
 }, false );
 
-( function( $ ) {
-    $( '.wpcf7' ).on( 'wpcf7:spam', function( e ) {
-        $( '[name="g-recaptcha-response"]', $( this ) ).each( function() {
-            if ( '' === $( this ).val() ) {
-                var $recaptcha = $( this ).closest( '.wpcf7-form-control-wrap' );
-                wpcf7.notValidTip( $recaptcha, wpcf7iqfix.recaptcha_empty );
-            }
-        } );
-    } );
-} )( jQuery );
+document.addEventListener( 'wpcf7spam', function( event ) {
+	var wpcf7forms = document.getElementsByClassName( 'wpcf7' );
+	Array.prototype.forEach.call( wpcf7forms, function( form ) {
+		var response  = form.querySelector( 'input[name="g-recaptcha-response"]' );
+		var recaptcha = form.querySelector( 'div.wpcf7-recaptcha' );
+		if( '' === response.value ) {
+			var recaptchaWrapper = recaptcha.parentElement;
+			wpcf7.notValidTip( recaptchaWrapper, wpcf7iqfix.recaptcha_empty );
+		}
+	} );
+} );
 </script>
 <?php
 
@@ -246,8 +243,10 @@ function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
 
 <noscript>
 	<div class="grecaptcha-noscript">
-		<iframe src="<?php echo esc_url( $url ); ?>" frameborder="0" scrolling="no" width="310" height="430"></iframe>
-		<textarea name="g-recaptcha-response" rows="3" cols="40" placeholder="<?php esc_attr_e( 'reCaptcha Response Here' ); ?>"></textarea>
+		<iframe src="<?php echo esc_url( $url ); ?>" frameborder="0" scrolling="no" width="310" height="430">
+		</iframe>
+		<textarea name="g-recaptcha-response" rows="3" cols="40" placeholder="<?php esc_attr_e( 'reCaptcha Response Here' ); ?>">
+		</textarea>
 	</div>
 </noscript>
 <?php
