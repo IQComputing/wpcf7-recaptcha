@@ -221,8 +221,8 @@ Class IQFix_WPCF7_Deity {
 		if( version_compare( WPCF7_VERSION, '5.1', '<' ) ) {
 			printf(
 				'<div class="wrap"><h1>%1$s</h1><p>%2$s</p></div>',
-				esc_html__( 'Contact Form 7 - reCaptcha v2', 'wpcf7-recaptcha' ),
-				esc_html__( 'This version of Contact Form 7 already uses reCaptcha version 2, you do not need \'Contact Form 7 - reCaptcha v2\' installed at this time.', 'wpcf7-recaptcha' )
+				esc_html__( 'ReCaptcha v2 for Contact Form 7', 'wpcf7-recaptcha' ),
+				esc_html__( 'This version of Contact Form 7 already uses reCaptcha version 2, you do not need \'ReCaptcha v2 for Contact Form 7\' installed at this time.', 'wpcf7-recaptcha' )
 			);
 			return;
 		}
@@ -238,7 +238,7 @@ Class IQFix_WPCF7_Deity {
 
 				<?php
 
-					printf( '<h1>%1$s</h1>', esc_html__( 'Contact Form 7 - reCaptcha v2', 'wpcf7-recaptcha' ) );
+					printf( '<h1>%1$s</h1>', esc_html__( 'ReCaptcha v2 for Contact Form 7', 'wpcf7-recaptcha' ) );
 
 					if( $updated ) {
 						printf(
