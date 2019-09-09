@@ -1,4 +1,4 @@
-=== Contact Form 7 - reCaptcha v2 ===
+=== ReCaptcha v2 for Contact Form 7 ===
 Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
