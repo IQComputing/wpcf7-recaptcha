@@ -3,7 +3,7 @@ Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
 Tested up to: 5.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,9 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.2.1 (2019-09-09) =
+* Updated the plugin name to fix Trademark infringement.
+
 = 1.2.0 (2019-06-13) =
 * Removed jQuery dependecy.
 * Converted jQuery reCaptcha submission check to vanilla JavaScript.
@@ -69,6 +72,3 @@ Should the above be correct, at this point it's time to open a support thread fo
 * Added selectable option to choose which website to pull reCaptcha resources from (google.com | recaptcha.net) Thanks @scits!
 * Added and modified some class methods. See extended changelog for further details.
 * Modified noscript reCaptcha to look and function better "default". Styling left to theme authors and developers.
-
-= 1.1.8 (2019-04-26) =
-* Fixed WPCF7+Flamingo bug which saved un-verified submissions to spam in Flamingo. Thanks @scits!
