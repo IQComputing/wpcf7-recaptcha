@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReCaptcha v2 for Contact Form 7
  * Description: ReCaptcha v2 Fix for Contact Form 7 5.1 and later.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: IQComputing
  * Author URI: http://www.iqcomputing.com/
  * License: GPL2
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
  */
 Class IQFix_WPCF7_Deity {
 
-	public static $version = '1.2.1';
+	public static $version = '1.2.2';
 
 
 	/**
@@ -258,15 +258,15 @@ Class IQFix_WPCF7_Deity {
 				<form method="post">
 					<?php wp_nonce_field( 'iqfix_wpcf7_vers_select', 'iqfix_wpcf7_nonce' ); ?>
 					
-					<label for="iqfix_recaptcha_version"><strong><?php esc_html_e( 'Select reCaptcha Usage' ); ?>:</strong></label><br />
+					<label for="iqfix_recaptcha_version"><strong><?php esc_html_e( 'Select reCaptcha Usage', 'wpcf7-recaptcha' ); ?>:</strong></label><br />
 					<select id="iqfix_recaptcha_version" name="iqfix_recaptcha_version">
 						<option value="0"><?php esc_html_e( 'Default Usage', 'wpcf7-recaptcha' ); ?></option>
 						<option value="2" <?php selected( $selection, 2, true ); ?>><?php esc_html_e( 'reCaptcha Version 2', 'wpcf7-recaptcha' ); ?></option>
 					</select>
 					
-					<?php printf( '<p>%s</p>', esc_html__( 'If you\'re not sure if your country blocks Google then you may leave this as default. Otherwise, if your country blocks google.com requests then please select the suggested recaptcha.net alternative below.' ) ); ?>
+					<?php printf( '<p>%s</p>', esc_html__( 'If you\'re not sure if your country blocks Google then you may leave this as default. Otherwise, if your country blocks google.com requests then please select the suggested recaptcha.net alternative below.', 'wpcf7-recaptcha' ) ); ?>
 					
-					<label for="iqfix_recaptcha_source"><strong><?php esc_html_e( 'Select reCaptcha Source' ); ?>:</strong></label><br />
+					<label for="iqfix_recaptcha_source"><strong><?php esc_html_e( 'Select reCaptcha Source', 'wpcf7-recaptcha' ); ?>:</strong></label><br />
 					<select id="iqfix_recaptcha_source" name="iqfix_recaptcha_source">
 						<option value="google.com">google.com</option>
 						<option value="recaptcha.net" <?php selected( $source, 'recaptcha.net', true ); ?>>recaptcha.net</option>
@@ -275,7 +275,7 @@ Class IQFix_WPCF7_Deity {
 					<?php if( is_network_admin() ) : ?>
 						
 						<hr />
-						<h2><?php esc_html__( 'Network Wide Settings' ); ?></h2>
+						<h2><?php esc_html__( 'Network Wide Settings', 'wpcf7-recaptcha' ); ?></h2>
 						
 						<p><strong><?php _e( 'Please read all of the below before committing to these changes.', 'wpcf7-recaptcha' ); ?></strong></p>
 						<p><?php _e( 'You may set Network wide API keys below. Please ensure that every network site is whitelisted in the Google API Console. ReCaptcha keys can still be set ( or unset ) on a per site basis if necessary.', 'wpcf7-recaptcha' ); ?></p>

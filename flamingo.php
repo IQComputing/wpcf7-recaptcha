@@ -8,7 +8,7 @@
  */
 
  
-defined( 'ABSPATH' ) or die( "Hey, you're not a flamingo! Goodbye." );
+defined( 'ABSPATH' ) or die( 'Hey, you\'re not a flamingo! Goodbye.' );
 
 
 Class IQFix_Flamingo {

@@ -2,6 +2,13 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.2.2 =
+
+Release Date: September 17, 2019
+
+* Overview
+	* Updated some translation function to include the plugin slug which should help translations. Thanks @alexclassroom !
+
 = 1.2.1 =
 
 Release Date: September 09, 2019

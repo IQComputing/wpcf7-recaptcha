@@ -245,7 +245,7 @@ function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
 	<div class="grecaptcha-noscript">
 		<iframe src="<?php echo esc_url( $url ); ?>" frameborder="0" scrolling="no" width="310" height="430">
 		</iframe>
-		<textarea name="g-recaptcha-response" rows="3" cols="40" placeholder="<?php esc_attr_e( 'reCaptcha Response Here' ); ?>">
+		<textarea name="g-recaptcha-response" rows="3" cols="40" placeholder="<?php esc_attr_e( 'reCaptcha Response Here', 'wpcf7-recaptcha' ); ?>">
 		</textarea>
 	</div>
 </noscript>
