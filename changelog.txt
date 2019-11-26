@@ -2,6 +2,18 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.2.3 =
+
+Release Date: November 13, 2019
+
+* Features
+	* Added reCaptcha alignment controls to the reCaptcha shortcode. Left, Center, Right.
+	* Added support for the Contact Form 7 constants `WPCF7_RECAPTCHA_SITEKEY` and `WPCF7_RECAPTCHA_SECRET` in the WP Config.
+		* For more information see the post by Takayuki Miyoshi ( https://contactform7.com/2019/08/04/contact-form-7-514/ )
+		
+* Fixes
+	* Updated the logging feature for whenever the reCaptcha returns an error. Uses Contact Form 7 log method.
+
 = 1.2.2 =
 
 Release Date: September 17, 2019

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReCaptcha v2 for Contact Form 7
  * Description: ReCaptcha v2 Fix for Contact Form 7 5.1 and later.
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author: IQComputing
  * Author URI: http://www.iqcomputing.com/
  * License: GPL2
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
  */
 Class IQFix_WPCF7_Deity {
 
-	public static $version = '1.2.2';
+	public static $version = '1.2.3';
 
 
 	/**

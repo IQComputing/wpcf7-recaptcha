@@ -109,6 +109,7 @@ var recaptchaCallback = function() {
 					'type': divs[ j ].getAttribute( 'data-type' ),
 					'size': divs[ j ].getAttribute( 'data-size' ),
 					'theme': divs[ j ].getAttribute( 'data-theme' ),
+					'align': divs[ j ].getAttribute( 'data-align' ),
 					'badge': divs[ j ].getAttribute( 'data-badge' ),
 					'tabindex': divs[ j ].getAttribute( 'data-tabindex' )
 				};
@@ -189,6 +190,7 @@ function iqfix_wpcf7_recaptcha_form_tag_handler( $tag ) {
 	$atts['data-size'] = $tag->get_option(
 		'size', '(compact|normal|invisible)', true );
 	$atts['data-theme'] = $tag->get_option( 'theme', '(dark|light)', true );
+	$atts['data-align'] = $tag->get_option( 'align', '(left|center|right)', true );
 	$atts['data-badge'] = $tag->get_option(
 		'badge', '(bottomright|bottomleft|inline)', true );
 	$atts['data-tabindex'] = $tag->get_option( 'tabindex', 'signed_int', true );
@@ -423,6 +425,26 @@ function iqfix_wpcf7_tag_generator_recaptcha( $contact_form, $args = '' ) {
 	</tr>
 
 	<tr>
+	<th scope="row"><?php
+		/* translators: ReCaptcha theme (light or dark) */
+		esc_html_e( 'Alignment', 'wpcf7-recaptcha' );
+	?></th>
+	<td>
+		<fieldset>
+		<legend class="screen-reader-text"><?php
+			/* translators: Alignment of the reCaptcha box (left, center, right) */
+			esc_html_e( 'Alignment', 'wpcf7-recaptcha' );
+		?></legend>
+		<label for="<?php echo esc_attr( $args['content'] . '-align-left' ); ?>"><input type="radio" name="align" class="option default" id="<?php echo esc_attr( $args['content'] . '-align-left' ); ?>" value="left" checked="checked" /> <?php /* translators: ReCaptcha alignment: left */ esc_html_e( 'Left', 'wpcf7-recaptcha' ); ?></label>
+		<br />
+		<label for="<?php echo esc_attr( $args['content'] . '-align-center' ); ?>"><input type="radio" name="align" class="option" id="<?php echo esc_attr( $args['content'] . '-align-center' ); ?>" value="center" /> <?php /* translators: ReCaptcha alignment: center */ esc_html_e( 'Center', 'wpcf7-recaptcha' ); ?></label>
+		<br />
+		<label for="<?php echo esc_attr( $args['content'] . '-align-right' ); ?>"><input type="radio" name="align" class="option" id="<?php echo esc_attr( $args['content'] . '-align-right' ); ?>" value="right" /> <?php /* translators: ReCaptcha alignment: right */ esc_html_e( 'Right', 'wpcf7-recaptcha' ); ?></label>
+		</fieldset>
+	</td>
+	</tr>
+
+	<tr>
 	<th scope="row"><label for="<?php echo esc_attr( $args['content'] . '-id' ); ?>"><?php
 		/* translators: HTML Attribute ID for reCaptcha box */
 		esc_html_e( 'Id attribute', 'wpcf7-recaptcha' );
@@ -487,7 +509,13 @@ function iqfix_recaptcha_class_init() {
 		 * return void
 		 */
 		private function __construct() {
-			$this->sitekeys = WPCF7::get_option( 'recaptcha' );
+			
+			if( defined( 'WPCF7_RECAPTCHA_SITEKEY' ) && defined( 'WPCF7_RECAPTCHA_SECRET' ) ) {
+				$this->sitekeys = array( WPCF7_RECAPTCHA_SITEKEY => WPCF7_RECAPTCHA_SECRET );
+			} else {
+				$this->sitekeys = WPCF7::get_option( 'recaptcha' );
+			}
+			
 		}
 
 
@@ -585,19 +613,20 @@ function iqfix_recaptcha_class_init() {
 				return $is_human;
 			}
 			
-			$source  = WPCF7::get_option( 'iqfix_recaptcha_source' );
-			$source  = IQFix_WPCF7_Deity::verify_recaptcha_source( $source );
-			$url 	 = sprintf( 'https://www.%s/recaptcha/api/siteverify', $source );
-			$sitekey = $this->get_sitekey();
-			$secret  = $this->get_secret( $sitekey );
-			
-			$response = wp_safe_remote_post( $url, array(
+			$source		= WPCF7::get_option( 'iqfix_recaptcha_source' );
+			$source		= IQFix_WPCF7_Deity::verify_recaptcha_source( $source );
+			$endpoint	= sprintf( 'https://www.%s/recaptcha/api/siteverify', $source );
+			$sitekey	= $this->get_sitekey();
+			$secret		= $this->get_secret( $sitekey );
+			$request	= array(
 				'body' => array(
 					'secret' => $secret,
 					'response' => $response_token,
 					'remoteip' => $_SERVER['REMOTE_ADDR'],
 				),
-			) );
+			);
+			
+			$response = wp_safe_remote_post( esc_url_raw( $endpoint ), $request );
 	
 			if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
 				
@@ -630,7 +659,9 @@ add_action( 'init', 'iqfix_recaptcha_class_init', 11 );
  */
 function iqfix_recaptcha_inline_css() {
 	
-	$iqfix_css ='.wpcf7 .wpcf7-recaptcha iframe {margin-bottom: 0;}';
+	$iqfix_css  = '.wpcf7 .wpcf7-recaptcha iframe {margin-bottom: 0;}';
+	$iqfix_css .= '.wpcf7 .wpcf7-recaptcha[data-align="center"] > div {margin: 0 auto;}';
+	$iqfix_css .= '.wpcf7 .wpcf7-recaptcha[data-align="right"] > div {margin: 0 0 0 auto;}';
 	wp_add_inline_style( 'contact-form-7', $iqfix_css );
 	
 }

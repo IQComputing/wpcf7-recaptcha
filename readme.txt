@@ -2,8 +2,8 @@
 Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
-Tested up to: 5.2
-Stable tag: 1.2.2
+Tested up to: 5.3
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,13 +60,13 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.2.3 (2019-10-13) =
+* Added support for wp-config Contact Form 7 key constants.
+* Added support for reCaptcha alignment.
+* Fixed an issue with google response logging should the api return an error.
+
 = 1.2.2 (2019-09-17) =
 * Fixed translation function to include plugin slug. Thanks @alexclassroom !
 
 = 1.2.1 (2019-09-09) =
 * Updated the plugin name to fix Trademark infringement.
-
-= 1.2.0 (2019-06-13) =
-* Removed jQuery dependecy.
-* Converted jQuery reCaptcha submission check to vanilla JavaScript.
-* Updated reCaptcha noscript to account for A3 Lazy Load Plugin.
