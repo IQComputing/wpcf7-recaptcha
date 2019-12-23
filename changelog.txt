@@ -2,6 +2,14 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.2.4 =
+
+Release Date: December 23, 2019
+
+* Overview
+	* Added lower priority to the reCaptcha enqueue hook so we can reserve the `google-recaptcha` handle before Contact Form 7 can. This shouldn't be needed but is an additional failsafe should the Conact Form 7 enqueue hook not be removed properly.
+	* Added constant checks against the Contact Form 7 constants. This will ensure the plugin does not break should those change or be removed in future versions of Contact Form 7. Future-proofing.
+
 = 1.2.3 =
 
 Release Date: November 13, 2019

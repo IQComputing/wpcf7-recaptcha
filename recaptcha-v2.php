@@ -21,7 +21,7 @@ function iqfix_wpcf7_manage_hooks() {
 
 	// reCaptcha Enqueues
 	remove_action( 'wp_enqueue_scripts', 'wpcf7_recaptcha_enqueue_scripts', 10 );
-	add_action( 'wp_enqueue_scripts', 'iqfix_wpcf7_recaptcha_enqueue_scripts', 10 );
+	add_action( 'wp_enqueue_scripts', 'iqfix_wpcf7_recaptcha_enqueue_scripts', 9 );
 
 	// reCaptcha Footer Javascript
 	remove_action( 'wp_footer', 'wpcf7_recaptcha_onload_script', 40 );
@@ -72,8 +72,8 @@ function iqfix_wpcf7_recaptcha_enqueue_scripts() {
 
 	wp_register_script( 'google-recaptcha', $url, array(), '2.0', true );
 	wp_localize_script( 'google-recaptcha', 'wpcf7iqfix', array(
-        'recaptcha_empty' => esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
-    ) );
+		'recaptcha_empty' => esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
+	) );
 
 }
 // See `iqfix_wpcf7_manage_hooks` callback above
@@ -176,7 +176,7 @@ document.addEventListener( 'wpcf7spam', function( event ) {
  */
 function iqfix_wpcf7_recaptcha_form_tag_handler( $tag ) {
 
-	if ( ! wp_script_is( 'google-recaptcha', 'registered' ) ) {
+	if ( ! wp_script_is( 'google-recaptcha', 'registered' ) && function_exists( 'wpcf7_recaptcha_enqueue_scripts' ) ) {
 		wpcf7_recaptcha_enqueue_scripts();
 	}
 

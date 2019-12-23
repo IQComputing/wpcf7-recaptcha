@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReCaptcha v2 for Contact Form 7
  * Description: ReCaptcha v2 Fix for Contact Form 7 5.1 and later.
- * Version: 1.2.3
+ * Version: 1.2.4
  * Author: IQComputing
  * Author URI: http://www.iqcomputing.com/
  * License: GPL2
@@ -18,7 +18,13 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
  */
 Class IQFix_WPCF7_Deity {
 
-	public static $version = '1.2.3';
+	
+	/**
+	 * WPCF7 ReCaptcha Plugin Version
+	 * 
+	 * @var String
+	 */
+	public static $version = '1.2.4';
 
 
 	/**
@@ -61,13 +67,14 @@ Class IQFix_WPCF7_Deity {
 	 * @return void
 	 */
 	private function include_files() {
-
-		$selection = WPCF7::get_option( 'iqfix_recaptcha' );
+		
+		$selection 		= WPCF7::get_option( 'iqfix_recaptcha' );
+		$cf7_version 	= ( defined( 'WPCF7_VERSION' ) ) ? WPCF7_VERSION : WPCF7::get_option( 'version', '0' );
 
 		// Prevent update from v2 to v3 notice.
 		WPCF7::update_option( 'recaptcha_v2_v3_warning', false );
 
-		if( empty( $selection ) || version_compare( WPCF7_VERSION, '5.1', '<' ) ) {
+		if( empty( $selection ) || version_compare( $cf7_version, '5.1', '<' ) ) {
 			return;
 		}
 
@@ -159,12 +166,14 @@ Class IQFix_WPCF7_Deity {
 	 * @return void
 	 */
 	public function register_submenus() {
-
+		
+		$cf7_admin_cap = ( defined( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY' ) ) ? WPCF7_ADMIN_READ_WRITE_CAPABILITY : 'publish_pages';
+		
 		add_submenu_page( 
 			'wpcf7',
 			esc_html__( 'reCaptcha Version', 'wpcf7-recaptcha' ),
 			esc_html__( 'reCaptcha Version', 'wpcf7-recaptcha' ),
-			WPCF7_ADMIN_READ_WRITE_CAPABILITY,
+			$cf7_admin_cap,
 			'recaptcha-version',
 			array( $this, 'display_recaptcha_version_subpage' )
 		);
@@ -197,8 +206,9 @@ Class IQFix_WPCF7_Deity {
 	 * @return void
 	 */
 	public function display_recaptcha_version_subpage() {
-
-		$updated = $this->save_recaptcha_settings();
+		
+		$updated 		= $this->save_recaptcha_settings();
+		$cf7_version 	= ( defined( 'WPCF7_VERSION' ) ) ? WPCF7_VERSION : WPCF7::get_option( 'version', '0' );
 		
 		// Grab Network Settings
 		if( is_network_admin() ) {
@@ -218,7 +228,7 @@ Class IQFix_WPCF7_Deity {
 		}
 
 		// Show simple message
-		if( version_compare( WPCF7_VERSION, '5.1', '<' ) ) {
+		if( version_compare( $cf7_version, '5.1', '<' ) ) {
 			printf(
 				'<div class="wrap"><h1>%1$s</h1><p>%2$s</p></div>',
 				esc_html__( 'ReCaptcha v2 for Contact Form 7', 'wpcf7-recaptcha' ),
