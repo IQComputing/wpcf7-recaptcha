@@ -2,6 +2,27 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.2.7 =
+
+Release Date: June 15, 2020
+
+* Overview
+	* Rearranged the plugin deity method calls so that inclusion of files is last.
+
+= 1.2.6 =
+
+Release Date: April 22, 2020
+
+* Overview
+	* Updated reCaptcha Javascript to use the passed event to find the specific form. This should fix any "2 forms 1 page" issues.
+
+= 1.2.5 =
+
+Release Date: April 20, 2020
+
+* Overview
+	* Updated WordPress Version to denote support for 5.4+
+
 = 1.2.4 =
 
 Release Date: December 23, 2019

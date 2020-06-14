@@ -146,8 +146,15 @@ document.addEventListener( 'wpcf7submit', function( event ) {
 }, false );
 
 document.addEventListener( 'wpcf7spam', function( event ) {
+	
 	var wpcf7forms = document.getElementsByClassName( 'wpcf7' );
+	
 	Array.prototype.forEach.call( wpcf7forms, function( form ) {
+		
+		if( form.getAttribute( 'id' ) != event.target.getAttribute( 'id' ) ) {
+			return;
+		}
+		
 		var response  = form.querySelector( 'input[name="g-recaptcha-response"]' );
 		var recaptcha = form.querySelector( 'div.wpcf7-recaptcha' );
 		if( '' === response.value ) {
