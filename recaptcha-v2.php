@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) or die( 'You cannot be here.' );
 
 /**
  * Remove old hooks and add new hook callbacks
- * 
+ *
  * @return void
  */
 function iqfix_wpcf7_manage_hooks() {
@@ -20,12 +20,10 @@ function iqfix_wpcf7_manage_hooks() {
 	add_filter( 'wpcf7_spam', 'iqfix_wpcf7_recaptcha_check_with_google', 9 );
 
 	// reCaptcha Enqueues
-	remove_action( 'wp_enqueue_scripts', 'wpcf7_recaptcha_enqueue_scripts', 10 );
-	add_action( 'wp_enqueue_scripts', 'iqfix_wpcf7_recaptcha_enqueue_scripts', 9 );
+	remove_action( 'wp_enqueue_scripts', 'wpcf7_recaptcha_enqueue_scripts', 20 );
 
 	// reCaptcha Footer Javascript
 	remove_action( 'wp_footer', 'wpcf7_recaptcha_onload_script', 40 );
-	add_action( 'wp_footer', 'iqfix_wpcf7_recaptcha_callback_script', 40 );
 
 }
 add_action( 'setup_theme', 'iqfix_wpcf7_manage_hooks' );
@@ -33,7 +31,7 @@ add_action( 'setup_theme', 'iqfix_wpcf7_manage_hooks' );
 
 /**
  * Remove current [recaptcha] tag and replace it with old reCaptcha tag
- * 
+ *
  * @return void
  */
 function iqfix_wpcf7_add_recaptcha_tag() {
@@ -51,145 +49,67 @@ add_action( 'wpcf7_init', 'iqfix_wpcf7_add_recaptcha_tag', 20 );
 
 /**
  * Register the Google reCaptcha API script
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN241
- * 
+ *
  * @return void
  */
 function iqfix_wpcf7_recaptcha_enqueue_scripts() {
-	
+
+	if( wp_script_is( 'google-recaptcha', 'registered' ) ) {
+		return;
+	}
+
 	$source = WPCF7::get_option( 'iqfix_recaptcha_source' );
 	$source = IQFix_WPCF7_Deity::verify_recaptcha_source( $source );
-	
+
 	$url = sprintf( 'https://www.%s/recaptcha/api.js', $source );
 	$url = add_query_arg( array(
-		'hl'		=> esc_attr( get_locale() ),	// Lowercase L
+		'hl'		=> esc_attr( apply_filters( 'wpcf7_recaptcha_locale', get_locale() ) ),	// Lowercase L
 		'onload'	=> 'recaptchaCallback',
 		'render' 	=> 'explicit',
 	), $url );
 
-	wp_register_script( 'google-recaptcha', $url, array(), '2.0', true );
+	wp_register_script( 'wpcf7-recaptcha-controls', plugins_url( 'assets/js/wpcf7-recaptcha-controls.js', __FILE__ ), array(), '1.2', true );
+	wp_register_script( 'google-recaptcha', $url, array( 'wpcf7-recaptcha-controls' ), '2.0', true );
 	wp_localize_script( 'google-recaptcha', 'wpcf7iqfix', array(
-		'recaptcha_empty' => esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
+		'recaptcha_empty'	=> esc_html__( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
+		'response_err'		=> esc_html__( 'wpcf7-recaptcha: Could not verify reCaptcha response.', 'wpcf7-recaptcha' ),
 	) );
 
-}
-// See `iqfix_wpcf7_manage_hooks` callback above
-
-
-/**
- * reCaptcha Javascript
- * 
- * @return void
- */
-function iqfix_wpcf7_recaptcha_callback_script() {
-
-	if ( ! wp_script_is( 'google-recaptcha', 'enqueued' ) ) {
-		return;
+	/**
+	 * Enqueue globally for FSE Themes.
+	 * Enqueue as needed for all other
+	 * themes in the shortcode callback.
+	 */
+	if( function_exists( 'wp_is_block_theme' ) && wp_is_block_theme() ) {
+		wp_enqueue_script( 'google-recaptcha' );
 	}
-
-?>
-<script type="text/javascript">
-var recaptchaWidgets = [];
-var recaptchaCallback = function() {
-	var forms = document.getElementsByTagName( 'form' );
-	var pattern = /(^|\s)g-recaptcha(\s|$)/;
-
-	for ( var i = 0; i < forms.length; i++ ) {
-		var divs = forms[ i ].getElementsByTagName( 'div' );
-
-		for ( var j = 0; j < divs.length; j++ ) {
-			var sitekey = divs[ j ].getAttribute( 'data-sitekey' );
-
-			if ( divs[ j ].className && divs[ j ].className.match( pattern ) && sitekey ) {
-				var params = {
-					'sitekey': sitekey,
-					'type': divs[ j ].getAttribute( 'data-type' ),
-					'size': divs[ j ].getAttribute( 'data-size' ),
-					'theme': divs[ j ].getAttribute( 'data-theme' ),
-					'align': divs[ j ].getAttribute( 'data-align' ),
-					'badge': divs[ j ].getAttribute( 'data-badge' ),
-					'tabindex': divs[ j ].getAttribute( 'data-tabindex' )
-				};
-
-				var callback = divs[ j ].getAttribute( 'data-callback' );
-
-				if ( callback && 'function' == typeof window[ callback ] ) {
-					params[ 'callback' ] = window[ callback ];
-				}
-
-				var expired_callback = divs[ j ].getAttribute( 'data-expired-callback' );
-
-				if ( expired_callback && 'function' == typeof window[ expired_callback ] ) {
-					params[ 'expired-callback' ] = window[ expired_callback ];
-				}
-
-				var widget_id = grecaptcha.render( divs[ j ], params );
-				recaptchaWidgets.push( widget_id );
-				break;
-			}
-		}
-	}
-};
-
-document.addEventListener( 'wpcf7submit', function( event ) {
-	switch ( event.detail.status ) {
-		case 'spam':
-		case 'mail_sent':
-		case 'mail_failed':
-			for ( var i = 0; i < recaptchaWidgets.length; i++ ) {
-				grecaptcha.reset( recaptchaWidgets[ i ] );
-			}
-	}
-}, false );
-
-document.addEventListener( 'wpcf7spam', function( event ) {
-	
-	var wpcf7forms = document.getElementsByClassName( 'wpcf7' );
-	
-	Array.prototype.forEach.call( wpcf7forms, function( form ) {
-		
-		if( form.getAttribute( 'id' ) != event.target.getAttribute( 'id' ) ) {
-			return;
-		}
-		
-		var response  = form.querySelector( 'input[name="g-recaptcha-response"]' );
-		var recaptcha = form.querySelector( 'div.wpcf7-recaptcha' );
-		if( '' === response.value ) {
-			var recaptchaWrapper = recaptcha.parentElement;
-			wpcf7.notValidTip( recaptchaWrapper, wpcf7iqfix.recaptcha_empty );
-		}
-	} );
-} );
-</script>
-<?php
 
 }
-// See `iqfix_wpcf7_manage_hooks` callback above
+add_action( 'wp_enqueue_scripts', 'iqfix_wpcf7_recaptcha_enqueue_scripts', 50 );
 
 
 /**
  * reCaptcha Callback
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5
  * contact-form-7\modules\recaptcha.php LN326
- * 
+ *
  * @param WPCF7_FormTag $tag
- * 
+ *
  * @return String $html
  */
 function iqfix_wpcf7_recaptcha_form_tag_handler( $tag ) {
 
-	if ( ! wp_script_is( 'google-recaptcha', 'registered' ) && function_exists( 'wpcf7_recaptcha_enqueue_scripts' ) ) {
-		wpcf7_recaptcha_enqueue_scripts();
-	}
-
-	wp_enqueue_script( 'google-recaptcha' );
-
 	$atts = array();
+
+	if( ! wp_script_is( 'google-recaptcha', 'enequeued' ) ) {
+		wp_enqueue_script( 'google-recaptcha' );
+	}
 
 	$recaptcha = WPCF7_RECAPTCHA::get_instance();
 	$atts['data-sitekey'] = $recaptcha->get_sitekey();
@@ -209,10 +129,10 @@ function iqfix_wpcf7_recaptcha_form_tag_handler( $tag ) {
 		wpcf7_form_controls_class( $tag->type, 'g-recaptcha' ) );
 	$atts['id'] = $tag->get_id_option();
 
-	$html = sprintf( '<div %1$s></div>', wpcf7_format_atts( $atts ) );
+	$html = sprintf( '<span %1$s></span>', wpcf7_format_atts( $atts ) );
 	$html .= iqfix_wpcf7_recaptcha_noscript(
 		array( 'sitekey' => $atts['data-sitekey'] ) );
-	$html = sprintf( '<div class="wpcf7-form-control-wrap">%s</div>', $html );
+	$html = sprintf( '<span class="wpcf7-form-control-wrap recaptcha" data-name="recaptcha">%s</span>', $html );
 
 	return $html;
 
@@ -222,13 +142,13 @@ function iqfix_wpcf7_recaptcha_form_tag_handler( $tag ) {
 
 /**
  * Display reCaptcha noscript tag should javacript be disabled.
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN360
- * 
+ *
  * @param Array $args
- * 
+ *
  * @return String
  */
 function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
@@ -240,7 +160,7 @@ function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
 	if ( empty( $args['sitekey'] ) ) {
 		return;
 	}
-	
+
 	$source = WPCF7::get_option( 'iqfix_recaptcha_source' );
 	$source = IQFix_WPCF7_Deity::verify_recaptcha_source( $source );
 	$url 	= add_query_arg( 'k', $args['sitekey'],
@@ -265,13 +185,13 @@ function iqfix_wpcf7_recaptcha_noscript( $args = '' ) {
 
 /**
  * Verify submission is legitimate, verify reCaptcha response
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN395
- * 
+ *
  * @param Boolean $spam
- * 
+ *
  * @return Boolean $spam
  */
 function iqfix_wpcf7_recaptcha_check_with_google( $spam ) {
@@ -310,11 +230,11 @@ function iqfix_wpcf7_recaptcha_check_with_google( $spam ) {
 
 /**
  * Grab and return the posted reCaptcha response
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN509
- * 
+ *
  * @return String|FALSE
  */
 function wpcf7_recaptcha_response() {
@@ -330,11 +250,11 @@ function wpcf7_recaptcha_response() {
 
 /**
  * Add [recaptcha] to Contact Form 7 field list
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN426
- * 
+ *
  * @return void
  */
 function iqfix_wpcf7_add_tag_generator_recaptcha() {
@@ -353,14 +273,14 @@ add_action( 'wpcf7_admin_init', 'iqfix_wpcf7_add_tag_generator_recaptcha', 45 );
 
 /**
  * Show [recaptcha] field settings
- * 
+ *
  * The following function was not written by IQComputing and is included in
  * Contact Form 7 v5.0.5 by Takayuki Miyoshi
  * contact-form-7\modules\recaptcha.php LN432
- * 
+ *
  * @param WPCF7_ContactForm $contact_form
  * @param Array $args
- * 
+ *
  * @return void
  */
 function iqfix_wpcf7_tag_generator_recaptcha( $contact_form, $args = '' ) {
@@ -383,7 +303,7 @@ function iqfix_wpcf7_tag_generator_recaptcha( $contact_form, $args = '' ) {
 
 		return;
 	}
-	
+
 	/* translators: %s is a link to the Contact Form 7 blog post regarding reCaptcha v3 */
 	$description 	= esc_html__( "Generate a form-tag for a reCaptcha widget. For more details, see %s.", 'wpcf7-recaptcha' );
 	$desc_link 		= wpcf7_link( 'https://contactform7.com/recaptcha/', esc_html__( 'reCaptcha', 'wpcf7-recaptcha' ) );
@@ -491,7 +411,7 @@ function iqfix_wpcf7_tag_generator_recaptcha( $contact_form, $args = '' ) {
 /**
  * The following class is supposed to use and replicate some functionality
  * From Contact Form 7 v5.0.5
- * 
+ *
  * @return void
  */
 function iqfix_recaptcha_class_init() {
@@ -499,7 +419,7 @@ function iqfix_recaptcha_class_init() {
 	if( ! class_exists( 'WPCF7_RECAPTCHA' ) ) {
 		return false;
 	}
-		
+
 	Class IQFix_ReCaptcha extends WPCF7_RECAPTCHA {
 
 		private static $instance;
@@ -508,49 +428,49 @@ function iqfix_recaptcha_class_init() {
 
 		/**
 		 * Class initialization
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
 		 * contact-form-7\modules\recaptcha.php LN202
-		 * 
+		 *
 		 * return void
 		 */
 		private function __construct() {
-			
+
 			if( defined( 'WPCF7_RECAPTCHA_SITEKEY' ) && defined( 'WPCF7_RECAPTCHA_SECRET' ) ) {
 				$this->sitekeys = array( WPCF7_RECAPTCHA_SITEKEY => WPCF7_RECAPTCHA_SECRET );
 			} else {
 				$this->sitekeys = WPCF7::get_option( 'recaptcha' );
 			}
-			
+
 		}
 
 
 		/**
 		 * Singleton
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
-		 * contact-form-7\modules\recaptcha.php LN10 
-		 * 
+		 * contact-form-7\modules\recaptcha.php LN10
+		 *
 		 * @return IQFix_ReCaptcha
 		 */
 		public static function get_instance() {
 			if ( empty( self::$instance ) ) {
 				self::$instance = new self;
 			}
-	
+
 			return self::$instance;
 		}
 
 
 		/**
 		 * Check if reCaptcha is active
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
 		 * contact-form-7\modules\recaptcha.php LN26
-		 * 
+		 *
 		 * @return Boolean
 		 */
 		public function is_active() {
@@ -562,11 +482,11 @@ function iqfix_recaptcha_class_init() {
 
 		/**
 		 * Get set reCaptcha sitekey
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
 		 * contact-form-7\modules\recaptcha.php LN45
-		 * 
+		 *
 		 * @return String|FALSE
 		 */
 		public function get_sitekey() {
@@ -574,25 +494,25 @@ function iqfix_recaptcha_class_init() {
 			or ! is_array( $this->sitekeys ) ) {
 				return false;
 			}
-	
+
 			$sitekeys = array_keys( $this->sitekeys );
-	
+
 			return $sitekeys[0];
 		}
-	
+
 
 		/**
 		 * Get set reCaptcha secret key
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
 		 * contact-form-7\modules\recaptcha.php LN55
-		 * 
+		 *
 		 * @return String|FALSE
 		 */
 		public function get_secret( $sitekey ) {
 			$sitekeys = (array) $this->sitekeys;
-	
+
 			if ( isset( $sitekeys[$sitekey] ) ) {
 				return $sitekeys[$sitekey];
 			} else {
@@ -603,13 +523,13 @@ function iqfix_recaptcha_class_init() {
 
 		/**
 		 * Verify reCaptcha Response
-		 * 
+		 *
 		 * The following method was not written by IQComputing and is included in
 		 * Contact Form 7 v5.0.5 by Takayuki Miyoshi
 		 * contact-form-7\modules\recaptcha.php LN65
-		 * 
+		 *
 		 * @param String $response_token
-		 * 
+		 *
 		 * @return Boolean $is_human
 		 */
 		public function verify( $response_token ) {
@@ -619,7 +539,7 @@ function iqfix_recaptcha_class_init() {
 			if ( empty( $response_token ) ) {
 				return $is_human;
 			}
-			
+
 			$source		= WPCF7::get_option( 'iqfix_recaptcha_source' );
 			$source		= IQFix_WPCF7_Deity::verify_recaptcha_source( $source );
 			$endpoint	= sprintf( 'https://www.%s/recaptcha/api/siteverify', $source );
@@ -632,23 +552,23 @@ function iqfix_recaptcha_class_init() {
 					'remoteip' => $_SERVER['REMOTE_ADDR'],
 				),
 			);
-			
+
 			$response = wp_safe_remote_post( esc_url_raw( $endpoint ), $request );
-	
+
 			if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
-				
+
 				if ( WP_DEBUG ) {
 					$this->log( $endpoint, $request, $response );
 				}
-	
+
 				return $is_human;
-				
+
 			}
-	
+
 			$response = wp_remote_retrieve_body( $response );
 			$response = json_decode( $response, true );
 			$is_human = isset( $response['success'] ) && true == $response['success'];
-			
+
 			return apply_filters( 'wpcf7_recaptcha_verify_response', $is_human, $response );
 
 		}
@@ -661,15 +581,97 @@ add_action( 'init', 'iqfix_recaptcha_class_init', 11 );
 
 /**
  * Add some inline CSS for the reCaptcha iframe
- * 
+ *
  * @return void
  */
 function iqfix_recaptcha_inline_css() {
-	
+
 	$iqfix_css  = '.wpcf7 .wpcf7-recaptcha iframe {margin-bottom: 0;}';
 	$iqfix_css .= '.wpcf7 .wpcf7-recaptcha[data-align="center"] > div {margin: 0 auto;}';
 	$iqfix_css .= '.wpcf7 .wpcf7-recaptcha[data-align="right"] > div {margin: 0 0 0 auto;}';
 	wp_add_inline_style( 'contact-form-7', $iqfix_css );
-	
+
 }
 add_action( 'wp_enqueue_scripts', 'iqfix_recaptcha_inline_css' );
+
+
+/**
+ * Validate empty reCaptcha
+ *
+ * @param Object $result
+ * @param Object $tag
+ *
+ * @return Object $result
+ */
+function iqfix_recaptcha_validation( $result, $tag ) {
+
+	if( empty( $tag->name ) ) {
+		$tag->name = 'recaptcha';
+	}
+
+	if( ! isset( $_POST['g-recaptcha-response'] ) ) {
+
+		$invalidate = wpcf7_get_message( 'iqfix_recaptcha_no_set' );
+		$result->invalidate(
+			$tag,
+			( ( ! empty( $invalidate ) ) ? $invalidate : __( 'Could not verify the reCaptcha response.', 'wpcf7-recaptcha' ) )
+		);
+
+	} else if( empty( $_POST['g-recaptcha-response'] ) ) {
+
+		$invalidate = wpcf7_get_message( 'iqfix_recaptcha_response_empty' );
+		$result->invalidate(
+			$tag,
+			( ( ! empty( $invalidate ) ) ? $invalidate : __( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ) )
+		);
+
+	}
+
+	return $result;
+
+}
+add_filter( 'wpcf7_validate_recaptcha', 'iqfix_recaptcha_validation', 10, 2 );
+add_filter( 'wpcf7_validate_recaptcha*', 'iqfix_recaptcha_validation', 10, 2 );
+
+
+/**
+ * Ensure that the reCaptcha has a name
+ *
+ * @param Array $tag
+ *
+ * @return Array $tag
+ */
+function iqfix_recaptcha_tag_name( $tag ) {
+
+	if( empty( $tag['name'] ) && 'recaptcha' === $tag['type'] ) {
+		$tag['name'] = 'recaptcha';
+	}
+
+	return $tag;
+
+}
+add_filter( 'wpcf7_form_tag', 'iqfix_recaptcha_tag_name' );
+
+
+/**
+ * Add reCaptcha message settings to Contact Form 7
+ *
+ * @param String $message
+ *
+ * @return String $message
+ */
+function iqfix_recaptcha_messages( $messages ) {
+
+	return array_merge( $messages, array(
+		'iqfix_recaptcha_no_set' => array(
+			'description'	=> __( 'This message shows whenever the reCaptcha is completely blocked. Added by plugin: ReCaptcha for Contact Form 7.', 'wpcf7-recaptcha' ),
+			'default'		=> __( 'Could not verify the reCaptcha response.', 'wpcf7-recaptcha' ),
+		),
+		'iqfix_recaptcha_response_empty' => array(
+			'description'	=> __( 'This message shows whenever the reCaptcha is unchecked upon submission. Added by plugin: ReCaptcha for Contact Form 7.', 'wpcf7-recaptcha' ),
+			'default'		=> __( 'Please verify that you are not a robot.', 'wpcf7-recaptcha' ),
+		),
+	) );
+
+}
+add_filter( 'wpcf7_messages', 'iqfix_recaptcha_messages' );
