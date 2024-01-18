@@ -2,8 +2,8 @@
 Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
-Tested up to: 6.3
-Stable tag: 1.4.4
+Tested up to: 6.4
+Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
