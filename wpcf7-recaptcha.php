@@ -259,7 +259,7 @@ Class IQFix_WPCF7_Deity {
 
 					/* translators: %s is a shortcode example wrapped in <code> tags. */
 					printf( '<p>%1$s</p>',
-						sprintf( esc_html__( 'Select the version of reCaptcha you would like to use. You will still need to use the %s shortcode tag in your Contact Form 7 forms.', 'wpcf7-recaptcha' ),
+						sprintf( esc_html__( 'Select the version of reCaptcha you would like to use. Only when ReCaptcha v2 is set you will need to use the %s shortcode tag in your Contact Form 7 forms.', 'wpcf7-recaptcha' ),
 							'<code>[recaptcha]</code>'
 						)
 					);
