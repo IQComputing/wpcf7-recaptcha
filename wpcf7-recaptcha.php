@@ -2,7 +2,7 @@
 /**
  * Plugin Name: ReCaptcha v2 for Contact Form 7
  * Description: ReCaptcha v2 Fix for Contact Form 7 5.1 and later.
- * Version: 1.4.5
+ * Version: 1.4.6
  * Author: IQComputing
  * Author URI: http://www.iqcomputing.com/
  * License: GPL2
@@ -24,7 +24,7 @@ Class IQFix_WPCF7_Deity {
 	 *
 	 * @var String
 	 */
-	public static $version = '1.4.5';
+	public static $version = '1.4.6';
 
 
 	/**
@@ -259,8 +259,9 @@ Class IQFix_WPCF7_Deity {
 
 					/* translators: %s is a shortcode example wrapped in <code> tags. */
 					printf( '<p>%1$s</p>',
-						sprintf( esc_html__( 'Select the version of reCaptcha you would like to use. Only when ReCaptcha v2 is set you will need to use the %s shortcode tag in your Contact Form 7 forms.', 'wpcf7-recaptcha' ),
-							'<code>[recaptcha]</code>'
+						sprintf( esc_html__( 'Only when "reCaptcha Version 2" is selected will you need to use the %s shortcode tag in your Contact Form 7 forms. ReCaptcha v3 (Default Usage) does not use a recaptcha shortcode.%sSelect the version of reCaptcha you would like to use:', 'wpcf7-recaptcha' ),
+							'<code>[recaptcha]</code>',
+							'<br />'
 						)
 					);
 				?>

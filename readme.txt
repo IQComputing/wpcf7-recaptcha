@@ -3,7 +3,7 @@ Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
 Tested up to: 6.4
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,11 +60,12 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.4.6 (2024-04-10) =
+* Improved desription text ( Thanks @rickcurran )
+* Tested and updated to support WordPress 6.5 Regina
+
+= 1.4.5 (2024-01-18) =
+* Tested and updated to support WordPress 6.4: Shirley
+
 = 1.4.4 (2023-08-09) =
 * Tested and updated to support WordPress 6.3: Lionel
-
-= 1.4.1 (2022-07-29) =
-* Fixed issue with validation error message not appearing on submission.
-
-= 1.4.0 (2022-06-01) =
-* Updated supported version for WordPress 6.0

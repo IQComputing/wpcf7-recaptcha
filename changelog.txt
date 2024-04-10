@@ -2,6 +2,24 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.4.6 =
+
+Release Date: April 10, 2024
+
+* Overview
+	* Tested and updated to support WordPress 6.5: Regina
+	* Improved description text to denote that the [recaptcha] shortcode is only needed for V2
+		* Thanks to user @rickcurran for pointing out that it was ambiguous and needed improvement!
+		* https://wordpress.org/support/topic/use-recaptcha-v3-but-only-with-the-recaptcha-tag/
+
+= 1.4.5 =
+
+Release Date: January 18, 2024
+
+* Happy New Year!
+* Overview
+	* Tested and updated to support WordPress 6.4: Shirley
+
 = 1.4.4 =
 
 Release Date: September 09, 2023
