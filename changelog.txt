@@ -2,6 +2,18 @@
 
 This is to keep track of all changes the plugin undertakes. The readme.txt should only contain the most recent 3.
 
+= 1.4.8 =
+
+Release Date: November 13, 2024
+
+* Overview
+	* Updated the "Tested up to" value to support 6.7+
+	* Updates TagGenerator usage to v2 per Contact Form 7 updates.
+
+* Code Changes
+	* Changes the iqfix_wpcf7_add_tag_generator_recaptcha() WPCF7_TagGenerator class to pass in `array( 'version' => 2 )`
+		which prevents deprecation errors from appearing. Not sure why but it's done!
+
 = 1.4.7 =
 
 Release Date: May 22, 2024

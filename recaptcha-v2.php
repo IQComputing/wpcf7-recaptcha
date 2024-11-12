@@ -264,7 +264,7 @@ function iqfix_wpcf7_add_tag_generator_recaptcha() {
 		'recaptcha',
 		esc_html__( 'reCaptcha', 'wpcf7-recaptcha' ),
 		'iqfix_wpcf7_tag_generator_recaptcha',
-		array( 'nameless' => 1 )
+		array( 'version' => 2 )
 	);
 
 }

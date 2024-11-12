@@ -2,8 +2,8 @@
 Contributors: iqcomputing
 Tags: contact-form-7, contact-form-7-recaptcha, recaptcha, spam
 Requires at least: 4.9
-Tested up to: 6.5
-Stable tag: 1.4.7
+Tested up to: 6.7
+Stable tag: 1.4.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,12 +60,13 @@ Should the above be correct, at this point it's time to open a support thread fo
 
 == Changelog ==
 
+= 1.4.8 (2024-11-13) =
+* Updated the "Tested up to" value to support 6.7+
+* Updates Contact Form 7 Tag Generator to v2
+
 = 1.4.7 (2024-05-22) =
 * Updated the "Tested up to" value to support 6.5+
 
 = 1.4.6 (2024-04-10) =
 * Improved desription text ( Thanks @rickcurran )
 * Tested and updated to support WordPress 6.5 Regina
-
-= 1.4.5 (2024-01-18) =
-* Tested and updated to support WordPress 6.4: Shirley
