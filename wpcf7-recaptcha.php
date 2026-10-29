@@ -167,10 +167,12 @@ Class IQFix_WPCF7_Deity {
 	 */
 	public function register_submenus() {
 
-		$cf7_admin_cap = ( defined( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY' ) ) ? WPCF7_ADMIN_READ_WRITE_CAPABILITY : 'publish_pages';
-
+		$cf7_admin_cap  = ( defined( 'WPCF7_ADMIN_READ_WRITE_CAPABILITY' ) ) ? WPCF7_ADMIN_READ_WRITE_CAPABILITY : 'publish_pages';
+		$cf7_version    = ( defined( 'WPCF7_VERSION' ) ) ? WPCF7_VERSION : WPCF7::get_option( 'version', '0' );
+		$parent_slug    = ( version_compare( $cf7_version, '6.2', '>=' ) ) ? 'wpcf7-dashboard' : 'wpcf7';
+		
 		add_submenu_page(
-			'wpcf7',
+			$parent_slug,
 			esc_html__( 'reCaptcha Version', 'wpcf7-recaptcha' ),
 			esc_html__( 'reCaptcha Version', 'wpcf7-recaptcha' ),
 			$cf7_admin_cap,
